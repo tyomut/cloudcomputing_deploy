@@ -22,7 +22,6 @@ from util import base64_to_pil
 # Declare a flask app
 app = Flask(__name__)
 
-
 # You can use pretrained model from Keras
 # Check https://keras.io/applications/
 # or https://www.tensorflow.org/api_docs/python/tf/keras/applications
@@ -34,7 +33,7 @@ print('Model loaded. Check http://127.0.0.1:5000/')
 
 
 # Model saved with Keras model.save()
-MODEL_PATH = 'models/your_model.h5'
+# MODEL_PATH = 'models/your_model.h5'
 
 # Load your own trained model
 # model = load_model(MODEL_PATH)

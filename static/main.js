@@ -132,7 +132,12 @@ function displayResult(data) {
   // display the result
   // imageDisplay.classList.remove("loading");
   hide(loader);
-  predResult.innerHTML = data.result;
+  
+  var probability = new String(eval(data.probability) * 100)
+  if (probability.indexOf('.') > 0 )
+	probability = probability.substring(0,probability.indexOf('.'))
+    
+  predResult.innerHTML = data.result + ' ' + probability + '%';
   show(predResult);
 }
 
