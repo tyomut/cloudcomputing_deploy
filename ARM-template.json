@@ -1,0 +1,2003 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sites_schulz_yomut_name": {
+            "defaultValue": "schulz-yomut",
+            "type": "String"
+        },
+        "serverfarms_ASP_rgwebapp_943d_externalid": {
+            "defaultValue": "/subscriptions/44d04155-f67b-42a3-a7be-caa02d625d80/resourceGroups/rg_webapp/providers/Microsoft.Web/serverfarms/ASP-rgwebapp-943d",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2022-03-01",
+            "name": "[parameters('sites_schulz_yomut_name')]",
+            "location": "North Europe",
+            "tags": {
+                "group": "schulz-yomut",
+                "project": "webapp"
+            },
+            "kind": "app,linux",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_schulz_yomut_name'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('sites_schulz_yomut_name'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[parameters('serverfarms_ASP_rgwebapp_943d_externalid')]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "vnetRouteAllEnabled": false,
+                "vnetImagePullEnabled": false,
+                "vnetContentShareEnabled": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "linuxFxVersion": "PYTHON|3.10",
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": false,
+                    "http20Enabled": false,
+                    "functionAppScaleLimit": 0,
+                    "minimumElasticInstanceCount": 0
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "customDomainVerificationId": "4F8527B0F2B633E85A2DB424D1AA70292CD4C1D156FD625FF35087D5484B6EC8",
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": true,
+                "redundancyMode": "None",
+                "publicNetworkAccess": "Enabled",
+                "storageAccountRequired": false,
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/ftp')]",
+            "location": "North Europe",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ],
+            "tags": {
+                "group": "schulz-yomut",
+                "project": "webapp"
+            },
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/scm')]",
+            "location": "North Europe",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ],
+            "tags": {
+                "group": "schulz-yomut",
+                "project": "webapp"
+            },
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/web')]",
+            "location": "North Europe",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ],
+            "tags": {
+                "group": "schulz-yomut",
+                "project": "webapp"
+            },
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "linuxFxVersion": "PYTHON|3.10",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "remoteDebuggingVersion": "VS2019",
+                "httpLoggingEnabled": true,
+                "acrUseManagedIdentityCreds": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$schulz-yomut",
+                "scmType": "ExternalGit",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": false,
+                "alwaysOn": false,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": false
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": [
+                        {
+                            "actionHostName": "schulz-yomut-staging.azurewebsites.net",
+                            "reroutePercentage": 0,
+                            "name": "staging"
+                        }
+                    ]
+                },
+                "autoHealEnabled": false,
+                "vnetRouteAllEnabled": false,
+                "vnetPrivatePortsCount": 0,
+                "publicNetworkAccess": "Enabled",
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "scmMinTlsVersion": "1.2",
+                "ftpsState": "FtpsOnly",
+                "preWarmedInstanceCount": 0,
+                "functionsRuntimeScaleMonitoringEnabled": false,
+                "minimumElasticInstanceCount": 0,
+                "azureStorageAccounts": {}
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/46903ecbf5f9f975abeddb862b3a1c94422af466')]",
+            "location": "North Europe",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "tyomut@posteo.de",
+                "author": "tyomut",
+                "deployer": "GitHub",
+                "message": "added probability",
+                "start_time": "2023-02-18T08:53:15.2955904Z",
+                "end_time": "2023-02-18T08:55:03.7846539Z",
+                "active": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/', parameters('sites_schulz_yomut_name'), '.azurewebsites.net')]",
+            "location": "North Europe",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ],
+            "properties": {
+                "siteName": "schulz-yomut",
+                "hostNameType": "Verified"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-26T14_39_55_8952111')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-26T23_39_56_1921775')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-27T08_39_56_6357629')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-27T14_39_56_8958538')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-27T23_39_57_4296670')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-28T08_39_57_7969357')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-28T14_39_58_0613277')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-28T23_39_58_5295008')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-29T08_39_58_9492475')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-29T14_39_59_2982164')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-29T23_39_59_8663433')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-30T08_40_00_0888761')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-30T14_40_00_7319181')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-30T23_40_01_1273214')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-31T08_40_01_5672441')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-31T14_40_01_8922474')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-01-31T23_40_02_3121076')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-01T08_40_03_2311719')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-01T14_40_04_8615989')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-01T23_40_03_9503406')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-02T08_40_04_6338786')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-02T14_40_04_6877633')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-02T23_40_05_1693910')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-03T08_40_05_5246976')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-03T14_40_05_8396903')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-03T23_40_06_4988577')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-04T08_40_07_2488780')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-04T14_40_07_5523680')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-04T23_40_08_3357617')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-05T08_40_08_4048116')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-05T14_40_08_8074414')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-05T23_40_09_2515060')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-06T08_40_09_5541679')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-06T14_40_09_8486763')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-06T23_40_10_6072216')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-07T08_40_10_6883153')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-07T14_40_11_0158416')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-07T23_40_11_3905414')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-08T08_40_11_8368468')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-08T14_40_12_1114963')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-08T23_40_12_5198608')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-09T08_40_12_9620697')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-09T14_40_13_8567054')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-09T23_40_14_0331687')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-10T08_40_14_4741672')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-10T14_40_14_7281902')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-10T23_40_15_1637680')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-11T05_40_15_4831783')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-11T08_40_15_6737377')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-11T11_40_15_7974447')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-11T14_40_15_9883457')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-11T17_40_16_0549844')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-11T20_40_16_7055914')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-11T23_40_16_3971727')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-12T05_40_16_7897487')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-12T08_40_16_8114749')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-12T11_40_17_0228677')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-12T14_40_17_1834909')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-12T17_40_17_3148917')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-12T20_40_17_4420910')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-12T23_40_17_6005025')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-13T05_40_17_9106106')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-13T08_40_18_1194887')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-13T11_40_18_2278717')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-13T14_40_18_6866353')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-13T17_40_18_4989760')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-13T20_40_19_2656696')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-13T23_40_19_3499873')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-14T05_40_19_6370702')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-14T08_40_19_7887832')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-14T11_40_19_9129129')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-14T14_40_20_0825139')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-14T17_40_20_2250482')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-14T20_40_20_2847881')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-14T23_40_20_4436065')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-15T05_40_20_7326583')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-15T08_40_20_9059325')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-15T11_40_20_9942960')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-15T14_40_21_1497122')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-15T17_40_21_2898233')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-15T20_40_21_4749438')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-15T23_40_21_5591412')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-16T05_40_21_8444780')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-16T08_40_21_9966674')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-16T11_40_22_1734064')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-16T14_40_22_3103969')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-16T17_40_23_0912152')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-16T20_40_23_1643813')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-16T23_40_23_3697925')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-17T05_40_23_5834083')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-17T08_40_23_7455031')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-17T11_40_23_8728493')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-17T14_40_24_0360922')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-17T17_40_24_1818143')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-17T20_40_24_3531722')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-17T23_40_24_4763299')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-18T05_40_24_7732381')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-18T08_40_24_9302124')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-18T11_40_25_0714195')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-18T14_40_25_2004597')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-18T17_40_26_0492523')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-18T20_40_25_5064314')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-18T23_40_25_6422193')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-19T05_40_25_9806132')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-19T08_40_26_0853505')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-19T11_40_26_5227930')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-19T14_40_26_4297617')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-19T17_40_26_9405560')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-19T20_40_27_1106463')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-19T23_40_27_2670114')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-20T05_40_27_5405447')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-20T08_40_27_6929511')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-20T11_40_27_8460585')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-20T14_40_27_9874398')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-20T17_40_28_1425002')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-20T20_40_28_2808428')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-20T23_40_28_4318176')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T05_40_28_8275743')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T06_40_28_7862621')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T07_40_29_0182133')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T08_40_28_8917557')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T09_40_29_0259143')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T10_40_29_2306141')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T11_40_29_0408761')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T12_40_29_1744865')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T13_40_29_1643099')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T14_40_29_2002298')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T15_40_29_2548283')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T16_40_29_2895621')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T17_40_29_3549064')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T18_40_29_4086815')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T19_40_29_6605933')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T20_40_29_5901379')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T21_40_29_5876615')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T22_40_29_6335388')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-21T23_40_29_6579173')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T00_40_29_7089197')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T01_40_29_8337203')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T02_40_29_8141072')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T03_40_29_8445850')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T04_40_29_9569169')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T05_40_29_9635116')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T06_40_30_0194997')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T07_40_30_0932705')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T08_40_30_1449914')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T09_40_30_3290941')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T10_40_30_1987272')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T11_40_30_6087901')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T12_40_30_7516505')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T13_40_30_5479790')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T14_40_30_6809174')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T15_40_30_6338145')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T16_40_30_7516605')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T17_40_31_4239368')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T18_40_30_8849926')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T19_40_30_8936883')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T20_40_30_8969375')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T21_40_31_0375579')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T22_40_31_0091723')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-22T23_40_31_0520000')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T00_40_31_2207294')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T01_40_31_1869061')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T02_40_31_2500039')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T03_40_31_2915655')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T04_40_31_4428632')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T05_40_31_3872302')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T06_40_31_5923136')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T07_40_31_4854722')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T08_40_31_5440996')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T09_40_32_1735612')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T10_40_32_1591571')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T11_40_32_2691273')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T12_40_32_3114634')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T13_40_32_2892532')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T14_40_32_4402563')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T15_40_32_3963734')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T16_40_32_4245122')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T17_40_32_5111661')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T18_40_32_5841463')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T19_40_32_5441808')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T20_40_32_6819957')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T21_40_32_6609455')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T22_40_32_7269701')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-23T23_40_32_7641646')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T00_40_33_0687369')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T01_40_33_2597311')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T02_40_32_9137607')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T03_40_32_9716191')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T04_40_33_0120747')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T05_40_33_0328401')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T06_40_33_2931400')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T07_40_33_1772966')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T08_40_33_5178881')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T09_40_33_2636587')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T10_40_33_2523545')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T11_40_33_3112268')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T12_40_33_3500247')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T13_40_33_4542135')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T14_40_33_4368202')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T15_40_33_5035244')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T16_40_33_5369956')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T17_40_33_6325499')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T18_40_33_6691747')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T19_40_33_7446198')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T20_40_33_7565791')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T21_40_33_8535120')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T22_40_33_8349737')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-24T23_40_33_8978074')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-25T00_40_33_9922448')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-25T01_40_33_9817844')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-25T02_40_34_0766685')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-25T03_40_34_0837047')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-25T04_40_34_2095598')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-25T05_40_34_1853340')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-25T06_40_34_2785359')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-25T07_40_34_2769747')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-25T08_40_34_3275160')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-25T09_40_34_3769956')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-25T10_40_34_4172765')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-25T11_40_34_4641794')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-25T12_40_34_5717943')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_schulz_yomut_name'), '/2023-02-25T13_40_34_5816152')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_schulz_yomut_name'))]"
+            ]
+        }
+    ]
+}
