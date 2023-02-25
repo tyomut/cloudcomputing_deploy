@@ -71,9 +71,6 @@ def predict():
         # Get the image from post request
         img = base64_to_pil(request.json)
 
-        # Save the image to ./uploads
-        #img.save("./uploads/image.png")
-
         # Make prediction
         preds = model_predict(img, model)
 
